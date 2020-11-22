@@ -29,25 +29,34 @@ app.get('/', (req, res) => {
 
 
 // adding users
-app.get('/adduser', (req, res) => {
-    res.render('adduser');
+app.get('/adduser', async (req, res) => {
+    const roster = await Roster.find({})
+    res.render('adduser', { roster });
 });
 
 app.post('/adduser', async (req, res) => {
-    const { firstName, lastName, userName, password, isActive, isAdmin } = req.body;
-    const hash = await bcrypt.hash(password, 12);
-    const user = new Roster({
-        firstName,
-        lastName,
-        userName,
-        password: hash,
-        isActive,
-        isAdmin
-    })
-    await user.save()
-        .then(() => {
-            res.redirect(`/users/${user._id}`)
+    const roster = await Roster.find({})
+    req.body.sigID = roster[roster.length - 1].sigID + 1
+    const userNameExist = Roster.find(req.body.userName);
+    if (!userNameExist) {
+        const { sigID, firstName, lastName, userName, password, isActive, isAdmin } = req.body;
+        const hash = await bcrypt.hash(password, 12);
+        const user = new Roster({
+            sigID,
+            firstName,
+            lastName,
+            userName,
+            password: hash,
+            isActive,
+            isAdmin
         })
+        await user.save()
+            .then(() => {
+                res.redirect(`/users/${user._id}`)
+            })
+    } else {
+        res.send(`Username ${req.body.userName} already exist!`)
+    }
 });
 
 

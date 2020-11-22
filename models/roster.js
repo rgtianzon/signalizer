@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const rosterSchema = new mongoose.Schema({
-    empID: Number,
+    sigID: Number,
     firstName: String,
     lastName: String,
     fullName: String,
