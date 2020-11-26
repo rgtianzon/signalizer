@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 
 // adding users
 app.get('/adduser', (req, res) => {
-    res.render('adduser');
+    res.render('user/adduser');
 });
 
 app.post('/adduser', async (req, res) => {
