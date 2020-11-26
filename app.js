@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 // adding users
 app.get('/adduser', async (req, res) => {
     const roster = await Roster.find({})
-    res.render('adduser', { roster });
+    res.render('user/adduser', { roster });
 });
 
 app.post('/adduser', async (req, res) => {
@@ -65,8 +65,6 @@ app.get('/users/:id', async (req, res) => {
     const roster = await Roster.findById(id)
     res.render('viewuser', { roster })
 })
-
-
 
 const port = 8080 || process.env.PORT;
 app.listen(port, () => {
