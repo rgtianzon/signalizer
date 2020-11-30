@@ -20,8 +20,10 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "ejs": "^3.1.5",
+    "ejs-mate": "^3.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "method-override": "^3.0.0",
     "mongoose": "^5.10.15",
     "nodemon": "^2.0.6",
     "popups": "^1.1.3"
