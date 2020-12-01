@@ -31,7 +31,7 @@ app.use(methodOverride('_method'));
 
 // routes
 app.get('/', (req, res) => {
-    res.send('Home Page!');
+    res.render('home');
 });
 
 
@@ -82,7 +82,7 @@ app.get('/managetask', async (req, res) => {
 })
 
 app.post('/managetask', async (req, res) => {
-    const task = await Task.find({})
+    const task = await Task.find({}).sort({created_at: -1})
     req.body.taskID = task[0].taskID + 1;
     const fi = req.body.taskName.replace(/\s/g, '');
     req.body.taskU = fi + req.body.taskID;
