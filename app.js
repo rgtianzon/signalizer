@@ -15,6 +15,7 @@ mongoose.connect('mongodb+srv://admin:TriskelioN12@cluster0.o9j4k.mongodb.net/si
     })
 
 const Roster = require('./models/roster');
+const Task = require('./models/tasks');
 const { isNull } = require("util");
 
 app.engine('ejs', ejsMate)
@@ -24,7 +25,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-// app.use(methodOverride('_method'));
+app.use(methodOverride('_method'));
 // app.use(session({ secret: 'notagoodsecret' }));
 
 
@@ -72,13 +73,50 @@ app.get('/users/:id', async (req, res) => {
     res.render('user/viewuser', { roster })
 })
 
+// Adding Task
+
+app.get('/managetask', async (req, res) => {
+    const task = await Task.find({}).sort({created_at: -1})
+    req.body.taskID = task[0].taskID + 1;
+    res.render('managetask', { task });
+})
+
+app.post('/managetask', async (req, res) => {
+    const task = await Task.find({})
+    req.body.taskID = task[0].taskID + 1;
+    const fi = req.body.taskName.replace(/\s/g, '');
+    req.body.taskU = fi + req.body.taskID;
+    const { taskID, taskU, taskName, taskType, details } = req.body;
+    const newTask = new Task({
+        taskID,
+        taskU,
+        taskName,
+        taskType,
+        details
+    })
+    await newTask.save()
+    res.redirect('managetask');
+})
+
+// deleting task
+
+app.get('/managetask/:id', async (req, res) => {
+    const task = await Task.findById(req.params.id)
+    res.render('taskshow', { task });
+})
+
+app.delete('/managetask/:id', async (req, res) => {
+    const { id } = req.params;
+    await Task.findByIdAndDelete(id);
+    console.log(id);
+    res.redirect('/managetask');
+});
+
+
 app.get('/taskoverride', async (req, res) => {
     res.render('taskoverride');
 })
 
-app.get('/managetask', async (req, res) => {
-    res.render('managetask');
-})
 
 const port = 8080 || process.env.PORT;
 app.listen(port, () => {
